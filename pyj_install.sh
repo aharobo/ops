@@ -49,8 +49,17 @@ ln -s /usr/local/python/bin/pip3 /usr/bin/pip
 
 Echo_Green " █ Adjust Python2 Script ..."
 ll /usr/bin/yum*
-sed -i "s/python/\python2/g"  /usr/bin/yum
-sed -i "s/python/\python2/g"  /usr/libexec/urlgrabber-ext-down
+
+cat /usr/bin/yum | grep -q 'python2'
+if [ $? -ne 1 ] ;then 
+   sed -i "s/python/\python2/g"  /usr/bin/yum
+fi
+
+cat /usr/libexec/urlgrabber-ext-down | grep -q 'python2'
+if [ $? -ne 1 ] ;then 
+   sed -i "s/python/\python2/g"  /usr/libexec/urlgrabber-ext-down
+fi
+ 
 cd
 echo 'export PATH=$PATH:/usr/local/python/bin/' >> /etc/profile
 source /etc/profile
