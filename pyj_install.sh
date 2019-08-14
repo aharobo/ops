@@ -21,6 +21,8 @@ PythonUrl=http://39.100.226.226/Python-3.6.1.tgz
 PythonZip=Python-3.6.1
 WebRoot=/home/wwwroot/
 
+ 
+
 Echo_Green " █ Install libs & Download... "
 
 yum -y install  build-essential psmisc python-dev libxml2 libxml2-dev epel-release
@@ -67,6 +69,8 @@ ln -s /usr/local/python/bin/django-admin /usr/bin/django-admin
 
 Echo_Green " █ Install Django  Test Project ..."
 
+rm -rf /home/wwwroot/pyweb
+
 DJ_PROJECT_NAME=pyweb
 
 cd ${WebRoot}
@@ -85,7 +89,7 @@ echo 'nohup  gunicorn --config=config.py pyweb.wsgi:application >/dev/null 2>&1 
 echo "ps -ef |grep gunicorn|grep -v grep|awk '{print $2}'| xargs kill -9"
 ls
 
-Echo_Green " █ start gunicorn ..."
+Echo_Green " █ config gunicorn ..."
 
 cat > ./config.py <<EOF
 
@@ -95,6 +99,7 @@ workers =multiprocessing.cpu_count() * 2 + 1
 
 EOF
 chmod 777 ./config.py
+Echo_Green " █ start gunicorn ..."
 nohup  gunicorn --config=config.py pyweb.wsgi:application >/dev/null 2>&1 &
 
  
@@ -150,7 +155,7 @@ pip install -r pkg.txt
 在部署环境下降生产环境下的需要模块全部安装
 
 EOF
-chmod 777 ./kill; cat ./kill
+chmod 777 ./kill; 
 
 
  
