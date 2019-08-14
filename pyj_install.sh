@@ -72,23 +72,20 @@ Echo_Green " █ Install Django  Test Project ..."
 
 rm -rf ${WebRoot}${DJ_PROJECT_NAME} 
 
+git config --global http.postBuffer 2M
 git clone https://github.com/aharobo/pyweb.git  ${WebRoot}${DJ_PROJECT_NAME}
 
 chmod -R 775 ${WebRoot}${DJ_PROJECT_NAME}
 
 cd  ${WebRoot}${DJ_PROJECT_NAME} ; pwd
 
-#cd ${WebRoot}
-#django-admin startproject ${DJ_PROJECT_NAME}
-#cd pyweb/
-#python manage.py startapp web
+
 
 Echo_Green " █ Install gunicorn ..."
 
 pip install gunicorn 
 
 Echo_Green " █ start gunicorn ..."
-nohup  gunicorn --config=config.py pyweb.wsgi:application >/dev/null 2>&1 &
 
 echo 'gunicorn pyweb.wsgi:application -b 0.0.0.0:8000 -w 4 -k gthread '
 echo 'gunicorn pyweb.wsgi:application'
@@ -97,10 +94,16 @@ echo '后台启动'
 echo 'nohup  gunicorn --config=config.py pyweb.wsgi:application >/dev/null 2>&1 &'
 echo '停止服务'
 echo "ps -ef |grep gunicorn|grep -v grep|awk '{print $2}'| xargs kill -9"
-ls 
- 
-Echo_Red "pyweb is started by gunicorn  on port:8888 , to manage gunicorn use 'cat kill'"
- 
+
+
+nohup  gunicorn --config=config.py pyweb.wsgi:application >/dev/null 2>&1 &
+ps ax
+Echo_Green "[pyweb] is started by gunicorn on port:8888 , to manage gunicorn use 'cat kill'"
+
+#cd ${WebRoot}
+#django-admin startproject ${DJ_PROJECT_NAME}
+#cd pyweb/
+#python manage.py startapp web
 cat > ./kill <<EOF
 
 sudo nohup gunicorn ${DJ_PROJECT_NAME}.wsgi:application -b 0.0.0.0:8000&
