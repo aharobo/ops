@@ -48,17 +48,11 @@ ln -s /usr/local/python/bin/pip3 /usr/bin/pip
 #创建python3与pip3软连接
 
 Echo_Green " █ Adjust Python2 Script ..."
-ll /usr/bin/yum*
+ls /usr/bin/yum*
 
-cat /usr/bin/yum | grep -q 'python2'
-if [ $? -ne 1 ] ;then 
-   sed -i "s/python/\python2/g"  /usr/bin/yum
-fi
-
-cat /usr/libexec/urlgrabber-ext-down | grep -q 'python2'
-if [ $? -ne 1 ] ;then 
-   sed -i "s/python/\python2/g"  /usr/libexec/urlgrabber-ext-down
-fi
+py_head='#! /usr/bin/python2'
+sed -i "1c${py_head}" /usr/libexec/urlgrabber-ext-down
+sed -i "1c${py_head}" /usr/bin/yum
  
 cd
 echo 'export PATH=$PATH:/usr/local/python/bin/' >> /etc/profile
@@ -78,7 +72,7 @@ DJ_PROJECT_NAME=pyweb
 cd ${WebRoot}
 django-admin startproject ${DJ_PROJECT_NAME}
 cd pyweb/
-python manage.py startapp app
+python manage.py startapp web
 
 Echo_Green " █ Install gunicorn ..."
 
