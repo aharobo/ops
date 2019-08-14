@@ -1,5 +1,9 @@
 #!/bin/bash
 
+Color_Text()
+{
+  echo -e " \e[0;$2m$1\e[0m"
+}
 Echo_Red()
 { 
 	echo $(Color_Text "$1" "31")
@@ -35,14 +39,21 @@ sed -i "s/Install_Mhash/\#Install_Mhash/g" install.sh
 sed -i "s/Install_Mcrypt/\#Install_Mcrypt/g" install.sh
 sed -i "s/Install_Freetype/\#Install_Freetype/g" install.sh
 sed -i "s/Check_PHP_Option/\#Check_PHP_Option/g" install.sh
+sed -i "s/Check_LNMP_Install/lnmp status;exit;/g" install.sh
+sed -i "s/Clean_DB_Src_Dir/\#Clean_DB_Src_Dir/g" install.sh
+
 sed -i "s/Install_PHP/\#Install_PHP/g" install.sh
 sed -i "s/LNMP_PHP_Opt/\#LNMP_PHP_Opt/g" install.sh
 sed -i "s/Creat_PHP_Tools/\#Creat_PHP_Tools/g" install.sh
 sed -i "s/isPHP=\"\"/\isPHP=\"ok\";return;/g" include/end.sh
 sed -i "s/Check_PHP_Files/\\#Check_PHP_Files/g" include/end.sh
 
+sed -i "s/StartUp php-fpm/return 0;/g" include/end.sh
+
 chmod 775 ./*.sh
 sudo ./install.sh
+echo 'It works' > /home/wwwroot/default/index.html;
+chmod 777 	/home/wwwroot/default/index.html;
 
 
 
