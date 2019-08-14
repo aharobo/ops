@@ -19,6 +19,7 @@ Echo_Yellow()
 PythonUrl=https://www.python.org/ftp/python/3.6.1/Python-3.6.1.tgz
 PythonUrl=http://39.100.226.226/Python-3.6.1.tgz
 PythonZip=Python-3.6.1
+DJ_PROJECT_NAME=pyweb
 WebRoot=/home/wwwroot/
 
  
@@ -69,41 +70,37 @@ ln -s /usr/local/python/bin/django-admin /usr/bin/django-admin
 
 Echo_Green " █ Install Django  Test Project ..."
 
-rm -rf /home/wwwroot/pyweb
+rm -rf ${WebRoot}${DJ_PROJECT_NAME} 
 
-DJ_PROJECT_NAME=pyweb
+git clone https://github.com/aharobo/pyweb.git  ${WebRoot}${DJ_PROJECT_NAME}
 
-cd ${WebRoot}
-django-admin startproject ${DJ_PROJECT_NAME}
-cd pyweb/
-python manage.py startapp web
+chmod -R 775 ${WebRoot}${DJ_PROJECT_NAME}
+
+cd  ${WebRoot}${DJ_PROJECT_NAME} ; pwd
+
+#cd ${WebRoot}
+#django-admin startproject ${DJ_PROJECT_NAME}
+#cd pyweb/
+#python manage.py startapp web
 
 Echo_Green " █ Install gunicorn ..."
 
 pip install gunicorn 
 
-echo 'gunicorn pyweb.wsgi:application -b 0.0.0.0:8000 -w 4 -k gthread '
-echo 'gunicorn pyweb.wsgi:application'
-echo 'gunicorn --config=config.py pyweb.wsgi:application'
-echo 'nohup  gunicorn --config=config.py pyweb.wsgi:application >/dev/null 2>&1 &'
-echo "ps -ef |grep gunicorn|grep -v grep|awk '{print $2}'| xargs kill -9"
-ls
-
-Echo_Green " █ config gunicorn ..."
-
-cat > ./config.py <<EOF
-
-import multiprocessing 
-bind = "0.0.0.0:8000"
-workers =multiprocessing.cpu_count() * 2 + 1
-
-EOF
-chmod 777 ./config.py
 Echo_Green " █ start gunicorn ..."
 nohup  gunicorn --config=config.py pyweb.wsgi:application >/dev/null 2>&1 &
 
+echo 'gunicorn pyweb.wsgi:application -b 0.0.0.0:8000 -w 4 -k gthread '
+echo 'gunicorn pyweb.wsgi:application'
+echo 'gunicorn --config=config.py pyweb.wsgi:application'
+echo '后台启动'
+echo 'nohup  gunicorn --config=config.py pyweb.wsgi:application >/dev/null 2>&1 &'
+echo '停止服务'
+echo "ps -ef |grep gunicorn|grep -v grep|awk '{print $2}'| xargs kill -9"
+ls 
  
-
+Echo_Red "pyweb is started by gunicorn  on port:8888 , to manage gunicorn use 'cat kill'"
+ 
 cat > ./kill <<EOF
 
 sudo nohup gunicorn ${DJ_PROJECT_NAME}.wsgi:application -b 0.0.0.0:8000&
@@ -156,6 +153,17 @@ pip install -r pkg.txt
 
 EOF
 chmod 777 ./kill; 
+
+exit
+
+cat > ./config.py <<EOF
+
+import multiprocessing 
+bind = "0.0.0.0:8888"
+workers =multiprocessing.cpu_count() * 2 + 1
+
+EOF
+
 
 
  
