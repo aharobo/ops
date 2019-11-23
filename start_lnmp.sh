@@ -22,7 +22,6 @@ yum -y install wget
 mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo_bak
 wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
 yum makecache
-yum -y update
 
 Echo_Green " Download LNMP Installer ..."
 
@@ -52,6 +51,7 @@ sed -i "s/StartUp php-fpm/return 0;/g" include/end.sh
 
 chmod 775 ./*.sh
 sudo ./install.sh
+sudo mkdir -p /home/wwwroot/default/
 echo 'It works' > /home/wwwroot/default/index.html;
 chmod 777 	/home/wwwroot/default/index.html;
 
