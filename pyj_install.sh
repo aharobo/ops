@@ -19,7 +19,6 @@ Echo_Yellow()
 PythonUrl=https://www.python.org/ftp/python/3.6.1/Python-3.6.1.tgz
 PythonUrl=http://39.100.226.226/Python-3.6.1.tgz
 PythonZip=Python-3.6.1
-DJ_PROJECT_NAME=pyweb
 WebRoot=/home/wwwroot/
 
  
@@ -61,31 +60,32 @@ cd
 echo 'export PATH=$PATH:/usr/local/python/bin/' >> /etc/profile
 source /etc/profile
 
-Echo_Green " █ Install Django  ..."
+#Echo_Green " █ Install Django  ..."
 
-yum install -y python-devel python-setuptools -y mysql-devel  MySQL-python
-pip install django==2.1.8 
-sudo find /usr -name django-admin
-ln -s /usr/local/python/bin/django-admin /usr/bin/django-admin
+#yum install -y python-devel python-setuptools -y mysql-devel  MySQL-python
+#pip install django==2.1.8 
+#sudo find /usr -name django-admin
+#ln -s /usr/local/python/bin/django-admin /usr/bin/django-admin
 
-Echo_Green " █ Install Django  Test Project ..."
+#Echo_Green " █ Install Django  Test Project ..."
 
-rm -rf ${WebRoot}${DJ_PROJECT_NAME} 
-
-git config --global http.postBuffer 2M
-git clone https://github.com/aharobo/pyweb.git  ${WebRoot}${DJ_PROJECT_NAME}
-
-chmod -R 775 ${WebRoot}${DJ_PROJECT_NAME}
-
-cd  ${WebRoot}${DJ_PROJECT_NAME} ; pwd
+#rm -rf ${WebRoot}${
 
 
+} 
 
-Echo_Green " █ Install gunicorn ..."
+#git config --global http.postBuffer 2M
+#git clone https://github.com/aharobo/pyweb.git  ${WebRoot}${DJ_PROJECT_NAME}
+
+#chmod -R 775 ${WebRoot}${DJ_PROJECT_NAME}
+#cd  ${WebRoot}${DJ_PROJECT_NAME} ; pwd
+
+
+Echo_Green "Install gunicorn ..."
 
 pip install gunicorn 
 
-Echo_Green " █ start gunicorn ..."
+Echo_Green "See  gunicorn ..."
 
 echo 'gunicorn pyweb.wsgi:application -b 0.0.0.0:8000 -w 4 -k gthread '
 echo 'gunicorn pyweb.wsgi:application'
@@ -94,16 +94,15 @@ echo '后台启动'
 echo 'nohup  gunicorn --config=config.py pyweb.wsgi:application >/dev/null 2>&1 &'
 echo '停止服务'
 echo "ps -ef |grep gunicorn|grep -v grep|awk '{print $2}'| xargs kill -9"
+Echo_Green "nohup  gunicorn --config=config.py pyweb.wsgi:application >/dev/null 2>&1 & , to manage gunicorn use 'cat kill'"
 
-
-nohup  gunicorn --config=config.py pyweb.wsgi:application >/dev/null 2>&1 &
-ps ax
-Echo_Green "[pyweb] is started by gunicorn on port:8888 , to manage gunicorn use 'cat kill'"
+# nohup  gunicorn --config=config.py pyweb.wsgi:application >/dev/null 2>&1 &
 
 #cd ${WebRoot}
 #django-admin startproject ${DJ_PROJECT_NAME}
 #cd pyweb/
 #python manage.py startapp web
+
 cat > ./kill <<EOF
 
 sudo nohup gunicorn ${DJ_PROJECT_NAME}.wsgi:application -b 0.0.0.0:8000&
