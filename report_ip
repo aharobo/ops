@@ -1,0 +1,1 @@
+ ip=$(ifconfig wlan0 | sed s/[[:space:]]//g); ip=${ip%netmask*}; ip=${ip#*inet}; echo $ip;time2=$(date "+%Y-%m-%d_%H:%M:%S");  url="http://aharobo.com:8080/report/"$ip"-"$time2 ;echo $url; curl  $url
