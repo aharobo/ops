@@ -5,7 +5,7 @@ import hashlib,sys
 import urllib.parse
 from urllib import request
 from urllib import parse
-from urllib.request import urlopen
+from urllib.request import urlopen 
 
 def report_push_ip(ip,info):
  
@@ -48,10 +48,15 @@ def report_push_ip(ip,info):
 
 #推送IP更新通知
 ip='';
-if len(sys.argv)>1 :
-    ip=sys.argv[1]
+if len(sys.argv)>2 :
+    ip=sys.argv[1] 
+    url= report_push_ip(ip,'ext_info')
+    print (url,sys.argv[2])  
+    if(sys.argv[2] == 'true'):
+        response = request.urlopen(url,timeout=1)
+        res = response.read().decode('utf-8') 
+        print('Push Done:',res) 
 else:
-    print ('参数不足')
- 
-print ( report_push_ip(ip,'ext_info') )
+    print ('参数不足') 
+  
  
