@@ -1,9 +1,7 @@
-#!/usr/bin/python
-#-*-coding:utf-8-*-
 
 import time
 import urllib
-import subprocess
+#-*-coding:utf-8-*-import subprocess
 from os import popen
 from json import loads
 from re import search
