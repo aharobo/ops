@@ -22,7 +22,7 @@ def report_push_ip(ip,info):
 
     timenow=(str)(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))
     notify_str='IP:'+ip+',@'+timenow
-    notify_title=info+':'+ip
+    notify_title=info
 
     pramas = {'access_id' : '2100349591',
     'account_list':'["RASPI"]',  
