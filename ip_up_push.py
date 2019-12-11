@@ -2,11 +2,17 @@
 # -*- coding: utf-8 -*-  
 import time, datetime
 import hashlib,sys
+import socket, fcntl, struct,sys
 import urllib.parse
 from urllib import request
 from urllib import parse
 from urllib.request import urlopen 
 
+    
+def get_local_ip(ifname):
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    return socket.inet_ntoa(fcntl.ioctl(s.fileno(), 0x8915, struct.pack('256s', bytes(ifname[:15],'utf-8')))[20:24])
+    
 def report_push_ip(ip,info):
  
     base_url='openapi.xg.qq.com/v2/push/account_list'
@@ -15,8 +21,8 @@ def report_push_ip(ip,info):
     timestamp=(str)((int)(time.time()))
 
     timenow=(str)(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))
-    notify_str='IP:'+ip+',时间:'+timenow
-    notify_title="树莓派上线 "+ip
+    notify_str='IP:'+ip+',@'+timenow
+    notify_title=info+':'+ip
 
     pramas = {'access_id' : '2100349591',
     'account_list':'["RASPI"]',  
@@ -49,13 +55,29 @@ def report_push_ip(ip,info):
 #推送IP更新通知
 ip='';
 if len(sys.argv)>2 :
+
+    #ARGS
     ip=sys.argv[1] 
-    url= report_push_ip(ip,'ext_info')
-    print (url,sys.argv[2])  
+    if ip=='auto':
+        ip=get_local_ip('wlan0')  
+    reason="default" 
+    if len(sys.argv)>3:
+        reason=sys.argv[3]  
+    ip=get_local_ip('wlan0') 
+    
+    #Report to Aha
+    url1="http://aharobo.com:8080/report/"   
+    req = urllib.request.urlopen(url1+ip+"__"+reason)
+    print (req.getcode(),"Reported to aha :",ip)
+    
+    #PUSH
+    url2= report_push_ip(ip,reason)
+    print (url2,ip,sys.argv[2])
     if(sys.argv[2] == 'true'):
-        response = request.urlopen(url,timeout=1)
+        response = request.urlopen(url2,timeout=3)
         res = response.read().decode('utf-8') 
         print('Push Done:',res) 
+        
 else:
     print ('参数不足') 
   
