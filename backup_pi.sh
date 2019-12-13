@@ -1,33 +1,51 @@
 #!/bin/sh
 
 #install tools
-sudo apt-get -y install rsync dosfstools parted kpartx exfat-fuse
+#sudo apt-get -y install rsync dosfstools parted kpartx exfat-fuse
+#echo -e "\033[35m 洋红字oldboy trainning \033[0m"
+ 
+echo_color(){ 
+	echo  "\033[35m $1 \033[0m"
+}   
 
+fdisk -l
+
+umount /mnt
 #mount USB device
 usbmount=/mnt
 mkdir -p $usbmount
-if [ -z $1 ]; then
-	echo "no argument, assume the mount device is /dev/sda1 ? Y/N"
+key=$1 
+if [ -z $key ]; then
+	echo_color "No argument, assume the mount device is /dev/sda1? Y/N"
 	read key
 	if [ "$key" = "y" -o "$key" = "Y" ]; then
-		sudo mount -o uid=1000 /dev/sda1 $usbmount
+		key =/dev/sda1
 	else
-		echo "$0 [backup dest device name], e.g. $0 /dev/sda1"
-		exit 0
-	fi
-else
-	sudo mount -o uid=1000 $1 $usbmount
+		 echo_color "Where are you want to back (eg /dev/sda1):"
+		 read key
+		 if [ -z $key ]; then
+			echo_color "Backup path not found. Done."
+			exit 0 
+		 fi
+	fi 
 fi
+
+sudo mount -o uid=1000 $key $usbmount
+
+grep $usbmount /etc/mtab 
+
 if [ -z "`grep $usbmount /etc/mtab`" ]; then
-	echo "mount fail, exit now"
+	echo_color "mount fail, exit now"
 	exit 0
 fi 
 
 img=$usbmount/rpi-`date +%Y%m%d-%H%M`.img
-#img=$usbmount/rpi.img
+echo_color "[Image File] $img"
+echo_color "[Ready]Press any key to start.."
+read key
+ 
 
-
-echo ===================== part 1, create a new blank img ===============================
+echo_color "[part 1], create a new blank img..."
 # New img file
 #sudo rm $img
 bootsz=`df -P | grep /boot | awk '{print $2}'`
@@ -51,7 +69,7 @@ sudo mkfs.vfat ${device}p1 -n boot
 sudo mkfs.ext4 ${device}p2
 
 
-echo ===================== part 2, fill the data to img =========================
+echo_color "[part2], fill the data to img ..."
 # mount partitions
 mountb=$usbmount/backup_boot/
 mountr=$usbmount/backup_root/
@@ -124,5 +142,5 @@ sudo kpartx -d $loopdevice
 sudo losetup -d $loopdevice
 sudo umount $usbmount
 rm -rf $mountb $mountr
-echo "==== All done. You can un-plug the backup device"
+echo_color "[OK] All done. You can un-plug the backup device"
 
