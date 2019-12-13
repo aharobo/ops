@@ -45,8 +45,7 @@ def report_push_ip(ip,info):
 
 
     sign = hashlib.md5(prama_str.encode(encoding='UTF-8')).hexdigest()
-
-    print(prama_str,'的签名:',sign,"||",prama_str_for_url) 
+    #print(prama_str,'的签名:',sign,"||",prama_str_for_url) 
     
     url="http://"+base_url+"?"+prama_str_for_url+"&sign="+sign
     return url
