@@ -72,7 +72,7 @@ if len(sys.argv)>2 :
     
     #PUSH
     url2= report_push_ip(ip,reason)
-    print (url2,ip,sys.argv[2])
+    #print (url2,ip,sys.argv[2])
     if(sys.argv[2] == 'true'):
         response = request.urlopen(url2,timeout=3)
         res = response.read().decode('utf-8') 
