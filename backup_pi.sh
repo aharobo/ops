@@ -142,5 +142,7 @@ sudo kpartx -d $loopdevice
 sudo losetup -d $loopdevice
 sudo umount $usbmount
 rm -rf $mountb $mountr
+
+echo Done @ $(date "+%Y-%m-%d %H:%M:%S")
 echo_color "[OK] All done. You can un-plug the backup device"
 
