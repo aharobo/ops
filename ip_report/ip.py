@@ -1,21 +1,34 @@
 import web
 import os
 import time, datetime
+
 urls = (
     '/getip/(.*)', 'getip',
     '/report/(.*)', 'report'
+    '/upper_html/(.*)', 'upper_html',
+    '/(js|css|images)/(.*)', 'static'
 )
+
 app = web.application(urls, globals())
+render = web.template.render('templates/')
+class upper_html:
+    def GET(self, text):
+        print('input:' + text)
+        return render.hello(content=text.upper())
+
+class static:
+    def GET(self, media, file):
+        try:
+            f = open(media+'/'+file, 'rb')
+            return f.read()
+        except:
+            return ''
+
 class getip:
     def GET(self, text): 
-        list = [] 
-        with open('ip.txt', 'rt', encoding='utf-8') as f:
-            for line in f:
-                list.append(line) 
-        ipss=list[0].split("__")
-        print(ipss) 
+        list = []  
         render=web.template.render("templates")
-        return render.index(ipss[1],ipss[2],ipss[0]) 
+        return render.index('1','2','2') 
 
 class report:
     def GET(self, text):
