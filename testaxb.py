@@ -25,6 +25,7 @@ web.config.debug = False
 
 测试登录
 https://developer.7moor.com/data-query/
+bjhqht1  4007Wyjv
 
 鉴权
 https://developer.7moor.com/v2docs/authorization/
